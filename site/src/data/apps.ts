@@ -21,7 +21,11 @@ type AppSpec = Readonly<{
 const noDescription = "No repository description provided.";
 
 const specs: readonly AppSpec[] = [
-  { name: "FeLinE Market Tracker", href: "/feline/", repo: { owner: "kitty-crow", repo: "felinebot" } },
+  {
+    name: "FeLinE Market Tracker",
+    href: "/feline/",
+    description: "FeLinE 1000X market tracking with persistent price history, deterministic OHLC candles, moving averages, RSI, Bollinger Bands and forecasts."
+  },
   {
     name: "Tarot",
     href: "/tarot/",

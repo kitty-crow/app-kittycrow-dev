@@ -16,6 +16,7 @@ export function Apps({ apps }: Props) {
         {apps.map((app) => (
           <a className="app-card" href={canonical(app.href)} key={app.href}>
             <span className="app-card__name">{app.name}</span>
+            <span className="app-card__description">{app.description}</span>
             <span className="app-card__route">app.kittycrow.dev{app.href}</span>
             <span className="app-card__arrow" aria-hidden="true">↗</span>
           </a>

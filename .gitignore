@@ -1,4 +1,5 @@
 node_modules/
+site/dist/
+site/.pages-src/
 .pages-cache/
-example/site/
 .DS_Store

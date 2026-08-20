@@ -1,45 +1,30 @@
 {
-  "name": "@kitty-crow/github-pages-template",
-  "version": "0.2.3",
-  "description": "Unbranded GitHub Pages build, runtime and component foundation.",
+  "name": "@kitty-crow/app-kittycrow-dev",
+  "version": "1.0.0",
+  "private": true,
   "type": "module",
-  "license": "MIT",
+  "description": "Static app index for app.kittycrow.dev.",
   "author": "Kitty Crow <kitty@kittycrow.dev> (https://kittycrow.dev)",
-  "repository": "github:kitty-crow/github-pages-template",
-  "bin": {
-    "pages-template": "./src/cli.ts"
-  },
-  "exports": {
-    ".": "./src/index.ts",
-    "./runtime": "./src/run/index.ts"
-  },
-  "files": [
-    "src",
-    "web",
-    "scaffold",
-    "docs",
-    "README.md",
-    "LICENSE",
-    "version.json"
-  ],
+  "license": "MIT",
   "scripts": {
-    "check": "bunx tsc --noEmit && bun test",
-    "test": "bun test",
-    "example:build": "bun src/cli.ts build example/pages.config.ts",
-    "example:serve": "bun src/serve.ts example/site"
+    "check": "bun run site:check && bun run site:test",
+    "site:check": "bunx tsc -p site/tsconfig.json --noEmit && bunx tsc -p site/tsconfig.bun.json --noEmit",
+    "site:build": "bun run site/build.ts",
+    "site:test": "bun test site/tests",
+    "site:ci": "bun run site:check && bun run site:build && bun run site:test"
+  },
+  "dependencies": {
+    "@kittycrypto/website": "file:vendor/website",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@types/bun": "1.3.14",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "typescript": "5.9.3"
   },
   "engines": {
     "bun": ">=1.3.14"
-  },
-  "keywords": [
-    "github-pages",
-    "static-site",
-    "bun",
-    "typescript",
-    "submodule"
-  ]
+  }
 }

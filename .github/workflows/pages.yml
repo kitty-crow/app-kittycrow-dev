@@ -1,23 +1,9 @@
-name: Reusable Pages build
+name: GitHub Pages
 
 on:
-  workflow_call:
-    inputs:
-      bun-version:
-        type: string
-        default: "1.3.14"
-      install-command:
-        type: string
-        default: "bun install"
-      check-command:
-        type: string
-        required: true
-      build-command:
-        type: string
-        required: true
-      artifact-path:
-        type: string
-        default: "site"
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -25,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ github.repository }}
+  group: pages
   cancel-in-progress: true
 
 jobs:
@@ -39,28 +25,25 @@ jobs:
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ inputs.bun-version }}
+          bun-version: "1.3.14"
       - name: Install
-        if: inputs.install-command != ''
-        run: ${{ inputs.install-command }}
-      - name: Check
-        run: ${{ inputs.check-command }}
-      - name: Build
-        run: ${{ inputs.build-command }}
+        run: bun install
+      - name: Check and build
+        run: bun run site:ci
       - name: Set up Pages
         uses: actions/configure-pages@v5
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ${{ inputs.artifact-path }}
+          path: site/dist
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Deploy
-        id: deployment
+        id: deploy
         uses: actions/deploy-pages@v4

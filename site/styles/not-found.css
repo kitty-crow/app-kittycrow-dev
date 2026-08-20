@@ -1,0 +1,49 @@
+.not-found-view {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+
+  & .not-found-view__code {
+    margin: 0;
+    color: var(--banner-teal);
+    font: 800 clamp(2.8rem, 12vw, 6rem) / 0.9 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  & .not-found-view__title {
+    margin: 0;
+    color: var(--header-text-colour);
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.8rem);
+  }
+
+  & .not-found-view__copy {
+    margin: 0;
+    max-width: 56ch;
+    color: var(--app-muted);
+    line-height: 1.55;
+  }
+}
+
+.not-found-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+
+  & a {
+    min-height: 2.6rem;
+    padding: 0.6rem 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--nav-border-colour);
+    border-radius: 0.65rem;
+    background: var(--menu-button-bg-colour);
+    color: var(--menu-button-text-colour);
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--menu-button-hover-bg-colour);
+    }
+  }
+}

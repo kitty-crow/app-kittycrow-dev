@@ -7,7 +7,7 @@ export function NotFound() {
         The address does not point to an app or page currently exposed through this index.
       </p>
       <div className="not-found-actions">
-        <a href="/">Return to Apps</a>
+        <a href="./">Return to Apps</a>
         <a href="https://kittycrow.dev/">Return to Blog</a>
       </div>
     </div>

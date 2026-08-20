@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 const root = join(import.meta.dir, "..", "..");
 
-test("public app descriptions come from the shared GitHub API contract", async () => {
+test("repository-backed app descriptions come from the shared GitHub API contract", async () => {
   const source = await Bun.file(join(root, "site", "src", "data", "apps.ts")).text();
 
   expect(source).toContain('import { githubRepo } from "@kittycrypto/website/github-api"');
@@ -13,18 +13,20 @@ test("public app descriptions come from the shared GitHub API contract", async (
     "sandsara-track-studio",
     "vectoriser",
     "unicode-art-studio",
-    "unicode-qr-studio",
-    "mikuOS"
+    "unicode-qr-studio"
   ]) expect(source).toContain(`repo: "${repo}"`);
 });
 
-test("private apps keep explicit descriptors", async () => {
+test("explicit app descriptors remain local when GitHub metadata is unavailable or intentionally omitted", async () => {
   const source = await Bun.file(join(root, "site", "src", "data", "apps.ts")).text();
 
   expect(source).toContain("FeLinE 1000X market tracking with persistent price history, deterministic OHLC candles, moving averages, RSI, Bollinger Bands and forecasts.");
   expect(source).toContain("A strongly typed TypeScript library for tarot draws, reader profiles, staged readings, handovers and structured OpenAI interpretation.");
+  expect(source).toContain("MIKU (MIKU Is Not the Kernel; it's Userspace) is the userspace of 初音ミクOS, written mikuOS in Latin script.");
+
   expect(source).not.toContain('repo: "felinebot"');
   expect(source).not.toContain('repo: "online-arcana"');
+  expect(source).not.toContain('repo: "mikuOS"');
 });
 
 test("missing GitHub metadata degrades without invented copy", async () => {

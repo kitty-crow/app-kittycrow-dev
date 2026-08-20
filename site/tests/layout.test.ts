@@ -27,3 +27,11 @@ test("floating Ko-fi is placed at the lower-left", async () => {
   expect(css).toContain("bottom: calc(1rem + var(--safe-bottom)) !important");
   expect(css).toContain("left: max(1rem, env(safe-area-inset-left)) !important");
 });
+
+test("header actions stay right aligned at desktop and mobile widths", async () => {
+  const css = await Bun.file(join(root, "site", "styles", "layout.css")).text();
+
+  expect(css).toContain("margin-inline-start: auto");
+  expect(css.match(/justify-content: flex-end/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
+  expect(css).not.toContain("justify-content: flex-start");
+});

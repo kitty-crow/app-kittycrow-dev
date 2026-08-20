@@ -3,19 +3,21 @@ import { join } from "node:path";
 
 const root = join(import.meta.dir, "..", "..");
 
-test("v1.0.5 keeps the app and deployed versions aligned", async () => {
+test("v1.0.6 keeps the app and deployed versions aligned", async () => {
   const pkg = await Bun.file(join(root, "package.json")).json() as { readonly version: string };
   const version = await Bun.file(join(root, "version.json")).json() as { readonly version: string };
 
-  expect(pkg.version).toBe("1.0.5");
-  expect(version.version).toBe("1.0.5");
+  expect(pkg.version).toBe("1.0.6");
+  expect(version.version).toBe("1.0.6");
 });
 
-test("window content has a responsive app-owned inset", async () => {
+test("window content root has a responsive app-owned inset", async () => {
   const css = await Bun.file(join(root, "site", "styles", "layout.css")).text();
 
   expect(css).toContain("--app-window-padding: clamp(1.25rem, 4vw, 2rem)");
-  expect(css).toContain("padding: var(--app-window-padding)");
+  expect(css).toContain('.app-window > .window-body > [data-window-content-root="true"]');
+  expect(css).toContain("padding: var(--app-window-padding) !important");
+  expect(css).toContain(".app-window {\n  width: 100%;\n  max-width: 100%;\n  padding: 0;");
 });
 
 test("floating Ko-fi is placed at the lower-left", async () => {

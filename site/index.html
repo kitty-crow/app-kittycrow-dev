@@ -10,21 +10,31 @@
   <meta property="og:description" content="Apps and tools hosted at app.kittycrow.dev.">
   <meta property="og:url" content="https://app.kittycrow.dev/">
   <title>Kitty's App Index</title>
+  <script>
+    (() => {
+      const repoBase = "/app-kittycrow-dev/";
+      const base = document.createElement("base");
+      base.href = location.pathname === "/app-kittycrow-dev" || location.pathname.startsWith(repoBase)
+        ? repoBase
+        : "/";
+      document.head.append(base);
+    })();
+  </script>
   <!-- pages:head -->
   <script>
     document.documentElement.classList.toggle("dark-mode", document.documentElement.dataset.theme === "dark");
   </script>
-  <link rel="stylesheet" href="/assets/website/styles/core/tokens.css">
-  <link rel="stylesheet" href="/assets/website/styles/core/theme.light.css">
-  <link rel="stylesheet" href="/assets/website/styles/core/theme.dark.css">
-  <link rel="stylesheet" href="/assets/website/styles/core/base.css">
-  <link rel="stylesheet" href="/assets/website/styles/modules/window.css">
-  <link rel="stylesheet" href="/styles/styles.css">
+  <link rel="stylesheet" href="assets/website/styles/core/tokens.css">
+  <link rel="stylesheet" href="assets/website/styles/core/theme.light.css">
+  <link rel="stylesheet" href="assets/website/styles/core/theme.dark.css">
+  <link rel="stylesheet" href="assets/website/styles/core/base.css">
+  <link rel="stylesheet" href="assets/website/styles/modules/window.css">
+  <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
   <header class="header">
     <div class="header__inner">
-      <a class="brand" href="/" aria-label="Kitty's App Index home">
+      <a class="brand" href="./" aria-label="Kitty's App Index home">
         <span class="brand__domain">app.kittycrow.dev</span>
         <span class="brand__title">Kitty's App Index</span>
       </a>
@@ -53,6 +63,6 @@
   </footer>
 
   <!-- pages:body -->
-  <script type="module" src="/assets/app.js"></script>
+  <script type="module" src="assets/app.js"></script>
 </body>
 </html>

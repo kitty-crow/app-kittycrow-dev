@@ -125,8 +125,15 @@ a {
 .app-window {
   width: 100%;
   max-width: 100%;
-  padding: var(--app-window-padding);
+  padding: 0;
   background: var(--frame-bg-colour);
+}
+
+/* The window API turns .app-window into the outer frame and moves the authored
+   children into this generated content root. Put the app inset here so the
+   title bar remains flush while all actual window content stays away from the edge. */
+.app-window > .window-body > [data-window-content-root="true"] {
+  padding: var(--app-window-padding) !important;
 }
 
 .footer {

@@ -35,7 +35,11 @@ const specs: readonly AppSpec[] = [
   { name: "Vectoriser", href: "/vectoriser/", repo: { owner: "kitty-crow", repo: "vectoriser" } },
   { name: "Unicode Art Studio", href: "/unicode-art-studio/", repo: { owner: "kitty-crow", repo: "unicode-art-studio" } },
   { name: "Unicode QR Studio", href: "/unicode-qr-studio/", repo: { owner: "kitty-crow", repo: "unicode-qr-studio" } },
-  { name: "mikuOS", href: "/mikuOS/", repo: { owner: "kitty-crow", repo: "mikuOS" } }
+  {
+    name: "mikuOS",
+    href: "/mikuOS/",
+    description: "MIKU (MIKU Is Not the Kernel; it's Userspace) is the userspace of 初音ミクOS, written mikuOS in Latin script."
+  }
 ] as const;
 
 async function resolve(spec: AppSpec): Promise<AppLink> {

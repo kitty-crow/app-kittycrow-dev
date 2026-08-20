@@ -1,43 +1,58 @@
+import { githubRepo } from "@kittycrypto/website/github-api";
+
 export type AppLink = Readonly<{
   name: string;
   href: string;
   description: string;
 }>;
 
-export const apps: readonly AppLink[] = [
-  {
-    name: "FeLinE Market Tracker",
-    href: "/feline/",
-    description: "Responsive $NYA market tracker with candle cadence, MA, RSI, Bollinger and deterministic forecast controls."
-  },
+type RepoRef = Readonly<{
+  owner: string;
+  repo: string;
+}>;
+
+type AppSpec = Readonly<{
+  name: string;
+  href: string;
+  repo?: RepoRef;
+  description?: string;
+}>;
+
+const noDescription = "No repository description provided.";
+
+const specs: readonly AppSpec[] = [
+  { name: "FeLinE Market Tracker", href: "/feline/", repo: { owner: "kitty-crow", repo: "felinebot" } },
   {
     name: "Tarot",
     href: "/tarot/",
-    description: "An atmospheric bilingual tarot-reading application with eight distinct readers, a complete 78-card deck and encrypted local reading storage."
+    description: "A strongly typed TypeScript library for tarot draws, reader profiles, staged readings, handovers and structured OpenAI interpretation."
   },
-  {
-    name: "Sandsara Track Studio",
-    href: "/sandsara-track-studio/",
-    description: "A fully client-side web studio for decoding, previewing and generating binary tracks used by Sandsara kinetic sand tables."
-  },
-  {
-    name: "Vectoriser",
-    href: "/vectoriser/",
-    description: "Strict TypeScript PNG-to-SVG vectorisation for Bun and the browser, using SVG paths without embedding the source raster."
-  },
-  {
-    name: "Unicode Art Studio",
-    href: "/unicode-art-studio/",
-    description: "PNG to dense Unicode text art for Bun and the browser, with optional true-colour foreground/background cells."
-  },
-  {
-    name: "Unicode QR Studio",
-    href: "/unicode-qr-studio/",
-    description: "A strongly typed Bun and TypeScript utility that renders genuine QR matrices as dense text using Unicode Braille Patterns characters."
-  },
-  {
-    name: "mikuOS",
-    href: "/mikuOS/",
-    description: "MIKU — MIKU Is Not the Kernel; it's Userspace — is the userspace of 初音ミクOS, written mikuOS in Latin script."
-  }
+  { name: "Sandsara Track Studio", href: "/sandsara-track-studio/", repo: { owner: "kitty-crow", repo: "sandsara-track-studio" } },
+  { name: "Vectoriser", href: "/vectoriser/", repo: { owner: "kitty-crow", repo: "vectoriser" } },
+  { name: "Unicode Art Studio", href: "/unicode-art-studio/", repo: { owner: "kitty-crow", repo: "unicode-art-studio" } },
+  { name: "Unicode QR Studio", href: "/unicode-qr-studio/", repo: { owner: "kitty-crow", repo: "unicode-qr-studio" } },
+  { name: "mikuOS", href: "/mikuOS/", repo: { owner: "kitty-crow", repo: "mikuOS" } }
 ] as const;
+
+async function resolve(spec: AppSpec): Promise<AppLink> {
+  if (spec.description) {
+    return { name: spec.name, href: spec.href, description: spec.description };
+  }
+
+  if (!spec.repo) {
+    return { name: spec.name, href: spec.href, description: noDescription };
+  }
+
+  try {
+    const meta = await githubRepo(spec.repo.owner, spec.repo.repo);
+    const description = meta.description?.trim() || noDescription;
+    return { name: spec.name, href: spec.href, description };
+  } catch {
+    return { name: spec.name, href: spec.href, description: noDescription };
+  }
+}
+
+/** Resolve repository descriptions at page load so GitHub remains the source of truth. */
+export async function loadApps(): Promise<readonly AppLink[]> {
+  return Promise.all(specs.map(resolve));
+}

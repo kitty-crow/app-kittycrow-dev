@@ -8,7 +8,7 @@ export function NotFound() {
       </p>
       <div className="not-found-actions">
         <a href="/">Return to Apps</a>
-        <a href="https://kittycrow.dev/blog">Return to Blog</a>
+        <a href="https://kittycrow.dev/">Return to Blog</a>
       </div>
     </div>
   );

@@ -31,9 +31,17 @@ const specs: readonly AppSpec[] = [
     href: "/tarot/",
     description: "A strongly typed TypeScript library for tarot draws, reader profiles, staged readings, handovers and structured OpenAI interpretation."
   },
-  { name: "Sandsara Track Studio", href: "/sandsara-track-studio/", repo: { owner: "kitty-crow", repo: "sandsara-track-studio" } },
+  {
+    name: "Sandsara Track Studio",
+    href: "/sandsara-track-studio/",
+    description: "A fully client-side web studio and VS Code extension for decoding, previewing and generating binary tracks for Sandsara kinetic sand tables."
+  },
   { name: "Vectoriser", href: "/vectoriser/", repo: { owner: "kitty-crow", repo: "vectoriser" } },
-  { name: "Unicode Art Studio", href: "/unicode-art-studio/", repo: { owner: "kitty-crow", repo: "unicode-art-studio" } },
+  {
+    name: "Unicode Art Studio",
+    href: "/unicode-art-studio/",
+    description: "PNG to dense Unicode text art for Bun and the browser, with optional true-colour foreground/background cells."
+  },
   { name: "Unicode QR Studio", href: "/unicode-qr-studio/", repo: { owner: "kitty-crow", repo: "unicode-qr-studio" } },
   {
     name: "mikuOS",

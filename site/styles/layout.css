@@ -70,6 +70,7 @@ a {
 }
 
 .header__nav {
+  margin-inline-start: auto;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -176,7 +177,7 @@ a {
 
   .header__nav {
     width: 100%;
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 }
 

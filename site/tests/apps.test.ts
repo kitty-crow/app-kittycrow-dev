@@ -22,7 +22,7 @@ test("explicit app descriptors remain local when GitHub metadata is unavailable 
 
   expect(source).toContain("FeLinE 1000X market tracking with persistent price history, deterministic OHLC candles, moving averages, RSI, Bollinger Bands and forecasts.");
   expect(source).toContain("A strongly typed TypeScript library for tarot draws, reader profiles, staged readings, handovers and structured OpenAI interpretation.");
-  expect(source).toContain("MIKU (MIKU Is Not the Kernel; it's Userspace) is the userspace of 初音ミクOS, written mikuOS in Latin script.");
+  expect(source).toContain("MIKU (MIKU Is Not the Kernel; it's Userspace) is the userspace of 初音ミクOS, written mikuOS. A Unix-Based Kernel (Teto) + Userland OS 100% ran on the client side via WASM.");
 
   expect(source).not.toContain('repo: "felinebot"');
   expect(source).not.toContain('repo: "online-arcana"');

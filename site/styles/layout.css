@@ -1,6 +1,7 @@
 :root {
   --app-shell-width: 72rem;
   --app-gutter: clamp(0.75rem, 2.5vw, 1.5rem);
+  --app-window-padding: clamp(1.25rem, 4vw, 2rem);
   --app-header-z: 50;
   --app-border: color-mix(in srgb, var(--nav-border-colour) 58%, transparent);
   --app-muted: color-mix(in srgb, var(--body-text-colour) 68%, transparent);
@@ -122,7 +123,7 @@ a {
 .app-window {
   width: 100%;
   max-width: 100%;
-  padding: clamp(0.9rem, 2.8vw, 1.4rem);
+  padding: var(--app-window-padding);
   background: var(--frame-bg-colour);
 }
 
@@ -143,6 +144,25 @@ a {
   & a {
     color: inherit;
   }
+}
+
+/* This page's window/header composition leaves the lower-left as the least intrusive
+   floating position. Keep the shared Pages Ko-fi source unchanged and override only
+   this project's placement. */
+.floatingchat-container-wrap,
+.floatingchat-container-wrap-mobi {
+  top: auto !important;
+  right: auto !important;
+  bottom: calc(1rem + var(--safe-bottom)) !important;
+  left: max(1rem, env(safe-area-inset-left)) !important;
+}
+
+.floating-chat-kofi-popup-iframe,
+.floating-chat-kofi-popup-iframe-mobi,
+.floating-chat-kofi-popup-iframe-closer,
+.floating-chat-kofi-popup-iframe-closer-mobi {
+  right: auto !important;
+  left: max(1rem, env(safe-area-inset-left)) !important;
 }
 
 @media (max-width: 40rem) {

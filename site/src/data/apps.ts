@@ -38,7 +38,7 @@ const specs: readonly AppSpec[] = [
   {
     name: "mikuOS",
     href: "/mikuOS/",
-    description: "MIKU (MIKU Is Not the Kernel; it's Userspace) is the userspace of 初音ミクOS, written mikuOS in Latin script."
+    description: "MIKU (MIKU Is Not the Kernel; it's Userspace) is the userspace of 初音ミクOS, written mikuOS. A Unix-Based Kernel (Teto) + Userland OS 100% ran on the client side via WASM."
   }
 ] as const;
 

@@ -1,6 +1,6 @@
 {
   "name": "@kitty-crow/app-kittycrow-dev",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "description": "Static app index for app.kittycrow.dev.",

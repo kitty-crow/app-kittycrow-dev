@@ -3,23 +3,38 @@ import { join } from "node:path";
 
 const root = join(import.meta.dir, "..", "..");
 
-test("every indexed app carries a README-sourced one-line description", async () => {
+test("public app descriptions come from the shared GitHub API contract", async () => {
   const source = await Bun.file(join(root, "site", "src", "data", "apps.ts")).text();
 
-  for (const phrase of [
-    "deterministic forecast controls",
-    "atmospheric bilingual tarot-reading application",
-    "fully client-side web studio",
-    "Strict TypeScript PNG-to-SVG vectorisation",
-    "PNG to dense Unicode text art",
-    "genuine QR matrices as dense text",
-    "MIKU Is Not the Kernel; it's Userspace"
-  ]) expect(source).toContain(phrase);
+  expect(source).toContain('import { githubRepo } from "@kittycrypto/website/github-api"');
+  expect(source).toContain("await githubRepo(spec.repo.owner, spec.repo.repo)");
 
-  expect(source.match(/description:/g)?.length ?? 0).toBe(7);
+  for (const repo of [
+    "sandsara-track-studio",
+    "vectoriser",
+    "unicode-art-studio",
+    "unicode-qr-studio",
+    "mikuOS"
+  ]) expect(source).toContain(`repo: "${repo}"`);
 });
 
-test("app cards render the description between name and route", async () => {
+test("private apps keep explicit descriptors", async () => {
+  const source = await Bun.file(join(root, "site", "src", "data", "apps.ts")).text();
+
+  expect(source).toContain("FeLinE 1000X market tracking with persistent price history, deterministic OHLC candles, moving averages, RSI, Bollinger Bands and forecasts.");
+  expect(source).toContain("A strongly typed TypeScript library for tarot draws, reader profiles, staged readings, handovers and structured OpenAI interpretation.");
+  expect(source).not.toContain('repo: "felinebot"');
+  expect(source).not.toContain('repo: "online-arcana"');
+});
+
+test("missing GitHub metadata degrades without invented copy", async () => {
+  const source = await Bun.file(join(root, "site", "src", "data", "apps.ts")).text();
+
+  expect(source).toContain('const noDescription = "No repository description provided."');
+  expect(source).toContain("meta.description?.trim() || noDescription");
+});
+
+test("app cards render the resolved description between name and route", async () => {
   const source = await Bun.file(join(root, "site", "src", "ui", "Apps.tsx")).text();
 
   expect(source).toContain("app-card__description");

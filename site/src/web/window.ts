@@ -1,6 +1,6 @@
 import { mountWindow, type WindowHandle } from "../../../vendor/website/src/window.ts";
 
-const launcher = "/assets/website/images/miku.svg";
+const launcher = new URL("assets/website/images/miku.svg", document.baseURI).href;
 
 export function mountAppWindow(frame: HTMLElement, id: string, title: string): WindowHandle {
   const dock = document.getElementById("window-dock");

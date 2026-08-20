@@ -67,8 +67,29 @@ test("keeps document glue, metadata and footer contracts", async () => {
   expect(notFound).toContain('id="not-found-window"');
 });
 
+test("resolves site assets from either deployment mount", async () => {
+  const home = await Bun.file(join(dist, "index.html")).text();
+  const notFound = await Bun.file(join(dist, "404.html")).text();
+
+  for (const html of [home, notFound]) {
+    expect(html).toContain('const repoBase = "/app-kittycrow-dev/"');
+    expect(html.indexOf("const repoBase")).toBeLessThan(html.indexOf("assets/pages/boot.js"));
+    expect(html).not.toContain('href="/assets/');
+    expect(html).not.toContain('src="/assets/');
+    expect(html).not.toContain('href="/styles/');
+  }
+
+  expect(home).toContain('src="assets/app.js"');
+  expect(notFound).toContain('src="assets/not-found.js"');
+
+  const windowSource = await Bun.file(join(root, "site", "src", "web", "window.ts")).text();
+  expect(windowSource).toContain("document.baseURI");
+  expect(windowSource).not.toContain('const launcher = "/');
+});
+
 test("builds every nginx-backed app link into the index", async () => {
   const app = await Bun.file(join(dist, "assets", "app.js")).text();
+  expect(app).toContain("https://app.kittycrow.dev/");
   for (const route of [
     "/feline/",
     "/tarot/",
@@ -80,12 +101,17 @@ test("builds every nginx-backed app link into the index", async () => {
   ]) expect(app).toContain(route);
 });
 
-test("404 offers routes back to the index and main-site blog", async () => {
+test("404 offers routes back to the mounted index and main-site blog", async () => {
+  const source = await Bun.file(join(root, "site", "src", "ui", "NotFound.tsx")).text();
+  const shell = await Bun.file(join(root, "site", "404.html")).text();
   const bundle = await Bun.file(join(dist, "assets", "not-found.js")).text();
+
+  expect(source).toContain('href="./"');
   expect(bundle).toContain("Return to Apps");
   expect(bundle).toContain("Return to Blog");
   expect(bundle).toContain("https://kittycrow.dev/");
   expect(bundle).not.toContain("https://kittycrow.dev/blog");
+  expect(shell).not.toContain("https://kittycrow.dev/blog");
 });
 
 test("uses the static TSX helper without a React application runtime", async () => {

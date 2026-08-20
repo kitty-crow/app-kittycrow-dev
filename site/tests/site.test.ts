@@ -84,7 +84,8 @@ test("404 offers routes back to the index and main-site blog", async () => {
   const bundle = await Bun.file(join(dist, "assets", "not-found.js")).text();
   expect(bundle).toContain("Return to Apps");
   expect(bundle).toContain("Return to Blog");
-  expect(bundle).toContain("https://kittycrow.dev/blog");
+  expect(bundle).toContain("https://kittycrow.dev/");
+  expect(bundle).not.toContain("https://kittycrow.dev/blog");
 });
 
 test("uses the static TSX helper without a React application runtime", async () => {

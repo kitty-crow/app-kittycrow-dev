@@ -5,7 +5,7 @@ const root = join(import.meta.dir, "..", "..");
 const dist = join(root, "site", "dist");
 
 const pagesPin = "b0e7a32e71d2fe1092bb78773f816139f4f10cbb";
-const websitePin = "2331a54893fed5ec7c0bdbd3d8d1c9fef51794f5";
+const websitePin = "0b347df2700a6082eaf548284f0c1ceaaee632ca";
 
 const tree = async (path: string): Promise<string> => {
   const proc = Bun.spawn(["git", "ls-tree", "HEAD", path], {
@@ -90,6 +90,7 @@ test("resolves site assets from either deployment mount", async () => {
 test("builds every nginx-backed app link into the index", async () => {
   const app = await Bun.file(join(dist, "assets", "app.js")).text();
   expect(app).toContain("https://app.kittycrow.dev/");
+  expect(app).toContain("api.github.com");
   for (const route of [
     "/feline/",
     "/tarot/",

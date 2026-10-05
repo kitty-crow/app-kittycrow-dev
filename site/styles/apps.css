@@ -39,14 +39,6 @@
     color: var(--header-text-colour);
   }
 
-  & .app-card__description {
-    grid-column: 1;
-    align-self: start;
-    color: var(--app-muted);
-    font-size: 0.84rem;
-    line-height: 1.4;
-  }
-
   & .app-card__route {
     grid-column: 1;
     align-self: end;

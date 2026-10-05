@@ -32,35 +32,39 @@
   <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-  <header class="header">
-    <div class="header__inner">
-      <a class="brand" href="./" aria-label="Kitty's App Index home">
-        <span class="brand__domain">app.kittycrow.dev</span>
-        <span class="brand__title">Kitty's App Index</span>
-      </a>
-      <nav class="header__nav" aria-label="Site links">
-        <a href="https://kittycrow.dev/">Website</a>
-        <a href="https://github.com/kitty-crow/app-kittycrow-dev">GitHub</a>
-        <button type="button" class="theme-button" data-theme-toggle aria-label="Toggle theme">
-          <span data-theme-label aria-hidden="true">☀️</span>
-        </button>
-      </nav>
-    </div>
-  </header>
+  <div class="frame">
+    <div class="frame-content">
+      <header class="header">
+        <div class="header__inner">
+          <a class="brand" href="./" aria-label="Kitty's App Index home">
+            <span class="brand__domain">app.kittycrow.dev</span>
+            <span class="brand__title">Kitty's App Index</span>
+          </a>
+          <nav class="header__nav" aria-label="Site links">
+            <a href="https://kittycrow.dev/">Website</a>
+            <a href="https://github.com/kitty-crow/app-kittycrow-dev">GitHub</a>
+            <button type="button" class="theme-button" data-theme-toggle aria-label="Toggle theme">
+              <span data-theme-label aria-hidden="true">☀️</span>
+            </button>
+          </nav>
+        </div>
+      </header>
 
-  <main class="main" id="main-content">
-    <div class="window-dock" id="window-dock">
-      <section id="apps-window" class="app-window" aria-label="Apps"></section>
-    </div>
-  </main>
+      <main class="main" id="main-content">
+        <div class="window-dock" id="window-dock">
+          <section id="apps-window" class="app-window" aria-label="Apps"></section>
+        </div>
+      </main>
 
-  <footer class="footer">
-    <span>Kitty's App Index · <span data-version>v?</span></span>
-    <span class="footer__links">
-      <a href="https://kittycrow.dev/">kittycrow.dev</a> ·
-      <a href="https://github.com/kitty-crow/app-kittycrow-dev">Source</a>
-    </span>
-  </footer>
+      <footer class="footer">
+        <span>Kitty's App Index · <span data-version>v?</span></span>
+        <span class="footer__links">
+          <a href="https://kittycrow.dev/">kittycrow.dev</a> ·
+          <a href="https://github.com/kitty-crow/app-kittycrow-dev">Source</a>
+        </span>
+      </footer>
+    </div>
+  </div>
 
   <!-- pages:body -->
   <script type="module" src="assets/app.js"></script>

@@ -20,6 +20,34 @@ test("window content root has a responsive app-owned inset", async () => {
   expect(css).toContain(".app-window {\n  width: 100%;\n  max-width: 100%;\n  padding: 0;");
 });
 
+test("apps and 404 share the main website centred frame contract", async () => {
+  const css = await Bun.file(join(root, "site", "styles", "layout.css")).text();
+  const home = await Bun.file(join(root, "site", "index.html")).text();
+  const notFound = await Bun.file(join(root, "site", "404.html")).text();
+
+  for (const html of [home, notFound]) {
+    expect(html).toContain('<div class="frame">');
+    expect(html).toContain('<div class="frame-content">');
+  }
+
+  expect(css).toContain("--layout-frame-outer-gutter: clamp(0.75rem, 2vw, 1.25rem)");
+  expect(css).toContain("--layout-frame-max-width: min(75rem, calc(100vw - (var(--layout-frame-outer-gutter) * 2)))");
+  expect(css).toContain("width: var(--frame-width)");
+  expect(css).toContain("max-width: var(--layout-frame-max-width)");
+  expect(css).toContain("margin: var(--layout-frame-outer-margin-block) var(--layout-frame-outer-margin-inline)");
+  expect(css).not.toContain("--app-shell-width");
+});
+
+test("apps and 404 windows always fill the same dock width", async () => {
+  const css = await Bun.file(join(root, "site", "styles", "layout.css")).text();
+
+  expect(css).toContain("grid-template-columns: minmax(0, 1fr)");
+  expect(css).toContain(".window-dock > .app-window,\n.window-dock > .window-frame");
+  expect(css).toContain("width: 100% !important");
+  expect(css).toContain("max-width: 100% !important");
+  expect(css).toContain("justify-self: stretch");
+});
+
 test("floating Ko-fi is placed at the lower-left", async () => {
   const css = await Bun.file(join(root, "site", "styles", "layout.css")).text();
 

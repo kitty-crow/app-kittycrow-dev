@@ -87,8 +87,9 @@ test("resolves site assets from either deployment mount", async () => {
   expect(windowSource).not.toContain('const launcher = "/');
 });
 
-test("builds every nginx-backed app link into the index", async () => {
+test("builds the app discovery client into the index", async () => {
   const app = await Bun.file(join(dist, "assets", "app.js")).text();
+  expect(app).toContain("https://srv.kittycrow.dev/apps");
   expect(app).toContain("https://app.kittycrow.dev/");
   expect(app).not.toContain("api.github.com");
   for (const route of [
@@ -99,7 +100,7 @@ test("builds every nginx-backed app link into the index", async () => {
     "/unicode-art-studio/",
     "/unicode-qr-studio/",
     "/mikuOS/"
-  ]) expect(app).toContain(route);
+  ]) expect(app).not.toContain(route);
 });
 
 test("404 offers routes back to the mounted index and main-site blog", async () => {

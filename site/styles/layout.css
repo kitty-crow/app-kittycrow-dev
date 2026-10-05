@@ -1,5 +1,10 @@
 :root {
-  --app-shell-width: 72rem;
+  --layout-frame-radius: 15px;
+  --layout-frame-outer-gutter: clamp(0.75rem, 2vw, 1.25rem);
+  --layout-frame-max-width: min(75rem, calc(100vw - (var(--layout-frame-outer-gutter) * 2)));
+  --layout-frame-outer-margin-block: var(--layout-frame-outer-gutter);
+  --layout-frame-outer-margin-inline: auto;
+
   --app-gutter: clamp(0.75rem, 2.5vw, 1.5rem);
   --app-window-padding: clamp(1.25rem, 4vw, 2rem);
   --app-header-z: 50;
@@ -15,15 +20,41 @@ html {
 body {
   min-height: 100dvh;
   width: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  justify-items: stretch;
   background: var(--body-bg-colour);
   color: var(--body-text-colour);
 }
 
 a {
   color: var(--menu-button-text-colour);
+}
+
+/* Match kittycrow.dev's whole-page centred frame instead of independently sizing
+   the header, content and footer. */
+.frame {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  height: fit-content;
+  padding: var(--frame-padding);
+  box-sizing: border-box;
+  position: relative;
+  background-color: var(--frame-bg-colour);
+  border-radius: var(--layout-frame-radius);
+  box-shadow: var(--frame-box-shadow);
+  width: var(--frame-width);
+  max-width: var(--layout-frame-max-width);
+  margin: var(--layout-frame-outer-margin-block) var(--layout-frame-outer-margin-inline);
+  overflow: auto;
+}
+
+.frame-content {
+  width: 100%;
+  min-width: 0;
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-content: stretch;
 }
 
 .header {
@@ -37,7 +68,7 @@ a {
   box-shadow: 0 0.25rem 1.2rem color-mix(in srgb, #000 12%, transparent);
 
   & .header__inner {
-    width: min(100%, var(--app-shell-width));
+    width: 100%;
     margin-inline: auto;
     min-height: 4.2rem;
     padding: 0.65rem var(--app-gutter);
@@ -110,7 +141,8 @@ a {
 }
 
 .main {
-  width: min(100%, var(--app-shell-width));
+  width: 100%;
+  min-width: 0;
   margin-inline: auto;
   padding: clamp(1rem, 4vw, 2.5rem) var(--app-gutter);
   display: grid;
@@ -118,8 +150,10 @@ a {
 }
 
 .window-dock {
+  width: 100%;
   min-width: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .app-window {
@@ -127,6 +161,16 @@ a {
   max-width: 100%;
   padding: 0;
   background: var(--frame-bg-colour);
+}
+
+/* Both docked windows must occupy the same frame width. Keep this scoped to the
+   dock so floating windows can still use the Window API's persisted dimensions. */
+.window-dock > .app-window,
+.window-dock > .window-frame {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0;
+  justify-self: stretch;
 }
 
 /* The window API turns .app-window into the outer frame and moves the authored

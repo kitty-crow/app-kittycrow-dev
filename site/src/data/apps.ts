@@ -1,47 +1,46 @@
 export type AppLink = Readonly<{
   name: string;
   href: string;
+  description: string;
 }>;
 
-export type AppFetcher = (url: string) => Promise<Response>;
+type AppsResponse = Readonly<{
+  apps: readonly unknown[];
+}>;
 
-const APP_DISCOVERY_ENDPOINT = "https://srv.kittycrow.dev/apps";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
+const APPS_ENDPOINT = "https://srv.kittycrow.dev/apps";
 
 function isAppLink(value: unknown): value is AppLink {
-  return isRecord(value)
-    && typeof value.name === "string"
-    && value.name.trim().length > 0
-    && typeof value.href === "string"
-    && value.href.startsWith("/");
+  if (!value || typeof value !== "object") return false;
+
+  const app = value as Record<string, unknown>;
+  return (
+    typeof app.name === "string" &&
+    typeof app.href === "string" &&
+    typeof app.description === "string"
+  );
 }
 
 export async function loadApps(
-  fetcher: AppFetcher = (url) => fetch(url)
+  fetcher: typeof fetch = fetch,
 ): Promise<readonly AppLink[]> {
-  const response = await fetcher(APP_DISCOVERY_ENDPOINT);
+  const response = await fetcher(APPS_ENDPOINT, {
+    headers: { accept: "application/json" },
+  });
 
   if (!response.ok) {
-    throw new Error(`App discovery request failed: ${response.status} ${response.statusText}`);
+    throw new Error(`Failed to load apps (${response.status}).`);
   }
 
-  const payload = await response.json() as unknown;
-
-  if (!isRecord(payload) || !Array.isArray(payload.apps)) {
-    throw new Error("App discovery returned an invalid payload.");
+  const payload = (await response.json()) as AppsResponse;
+  if (!payload || !Array.isArray(payload.apps)) {
+    throw new Error("Apps response is malformed.");
   }
 
-  return payload.apps.map((value, index) => {
-    if (!isAppLink(value)) {
-      throw new Error(`App discovery returned an invalid app at index ${index}.`);
-    }
+  const apps = payload.apps.filter(isAppLink);
+  if (apps.length !== payload.apps.length) {
+    throw new Error("Apps response contains malformed app entries.");
+  }
 
-    return {
-      name: value.name,
-      href: value.href
-    };
-  });
+  return apps.map(({ name, href, description }) => ({ name, href, description }));
 }

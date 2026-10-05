@@ -1,70 +1,66 @@
-import { expect, test } from "bun:test";
-import { join } from "node:path";
+import { describe, expect, it } from "bun:test";
 import { loadApps } from "../src/data/apps.ts";
 
-const root = join(import.meta.dir, "..", "..");
+const discoveredApps = [
+  {
+    name: "FeLinE Market Tracker",
+    href: "/feline/",
+    description: "Live bid and offer quoting workflow for the Fishy.gg marketplace.",
+    source: "local",
+  },
+  {
+    name: "Vectoriser",
+    href: "/vectoriser/",
+    description: "Convert raster images into SVG line art for plotting and laser workflows.",
+    source: "github",
+    repository: "kitty-crow/vectoriser",
+  },
+] as const;
 
-test("app catalogue is loaded from the server discovery endpoint", async () => {
-  let requestedUrl = "";
+const expectedApps = discoveredApps.map(({ name, href, description }) => ({
+  name,
+  href,
+  description,
+}));
 
-  const apps = await loadApps(async (url) => {
-    requestedUrl = url;
-
-    return new Response(JSON.stringify({
-      generatedAt: "2026-10-05T08:47:54.953Z",
-      apps: [
+describe("app catalogue", () => {
+  it("loads the app catalogue from the discovery endpoint", async () => {
+    const requests: Array<{ url: string; accept: string | null }> = [];
+    const fetcher = async (input: string | URL | Request, init?: RequestInit) => {
+      const headers = new Headers(init?.headers);
+      requests.push({
+        url: String(input),
+        accept: headers.get("accept"),
+      });
+      return new Response(
+        JSON.stringify({ generatedAt: "2026-10-05T12:00:00.000Z", apps: discoveredApps }),
         {
-          name: "FeLinE Market Tracker",
-          href: "/feline/",
-          description: "ignored",
-          source: "local"
+          status: 200,
+          headers: { "content-type": "application/json" },
         },
-        {
-          name: "vectoriser",
-          href: "/vectoriser/",
-          description: "also ignored",
-          source: "github",
-          repository: "kitty-crow/vectoriser"
-        }
-      ]
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" }
-    });
+      );
+    };
+
+    await expect(loadApps(fetcher as typeof fetch)).resolves.toEqual(expectedApps);
+    expect(requests).toEqual([
+      {
+        url: "https://srv.kittycrow.dev/apps",
+        accept: "application/json",
+      },
+    ]);
   });
 
-  expect(requestedUrl).toBe("https://srv.kittycrow.dev/apps");
-  expect(apps).toEqual([
-    {
-      name: "FeLinE Market Tracker",
-      href: "/feline/"
-    },
-    {
-      name: "vectoriser",
-      href: "/vectoriser/"
-    }
-  ]);
-});
+  it("rejects unsuccessful or malformed responses", async () => {
+    const failingFetcher = async () => new Response("nope", { status: 503 });
+    await expect(loadApps(failingFetcher as typeof fetch)).rejects.toThrow(
+      "Failed to load apps (503).",
+    );
 
-test("app catalogue rejects unsuccessful or malformed discovery responses", async () => {
-  await expect(loadApps(async () => new Response("unavailable", {
-    status: 503,
-    statusText: "Service Unavailable"
-  }))).rejects.toThrow("App discovery request failed: 503 Service Unavailable");
+    const malformedFetcher = async () =>
+      new Response(JSON.stringify({ apps: [{ name: "Broken" }] }), { status: 200 });
 
-  await expect(loadApps(async () => new Response(JSON.stringify({ apps: [
-    { name: "Broken", href: "not-an-app-route" }
-  ] }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" }
-  }))).rejects.toThrow("App discovery returned an invalid app at index 0.");
-});
-
-test("app cards no longer render descriptions", async () => {
-  const source = await Bun.file(join(root, "site", "src", "ui", "Apps.tsx")).text();
-  const dataSource = await Bun.file(join(root, "site", "src", "data", "apps.ts")).text();
-
-  expect(source).not.toContain("app-card__description");
-  expect(source).not.toContain("app.description");
-  expect(dataSource).not.toContain("description: string");
+    await expect(loadApps(malformedFetcher as typeof fetch)).rejects.toThrow(
+      "Apps response contains malformed app entries.",
+    );
+  });
 });

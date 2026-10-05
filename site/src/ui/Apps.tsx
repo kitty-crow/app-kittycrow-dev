@@ -4,6 +4,9 @@ type Props = Readonly<{
   apps: readonly AppLink[];
 }>;
 
+const canonical = (path: string): string =>
+  new URL(path.replace(/^\/+/, ""), "https://app.kittycrow.dev/").href;
+
 const rootStyles = {
   padding: "10px 12px 12px",
 } as const;
@@ -35,7 +38,7 @@ export function Apps({ apps }: Props) {
           {apps.map((app) => (
             <tr key={app.href}>
               <td style={{ width: "32%", borderBottom: "1px solid var(--kc-app-border)" }}>
-                <a href={app.href} style={linkStyles}>
+                <a href={canonical(app.href)} style={linkStyles}>
                   {app.name}
                 </a>
               </td>
